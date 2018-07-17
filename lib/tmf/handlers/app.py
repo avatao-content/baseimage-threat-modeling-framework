@@ -5,7 +5,13 @@ from flask import Flask
 
 from tmf.handlers.static_handlers import system_blueprint, component_blueprint
 
-if __name__ == "main":
+
+if __name__ == "__main__":
+    print("starting server")
+
     app = Flask(__name__)
+
     app.register_blueprint(system_blueprint)
     app.register_blueprint(component_blueprint)
+
+    app.run(debug=True)

@@ -5,7 +5,7 @@ from uuid import UUID
 
 from flask import Blueprint, request, jsonify
 
-from tmf.dataaccess.data_gateway import create_new_system, set_system_name, set_system_description
+from tmf.dataaccess.data_gateway import create_new_system_model, set_system_name, set_system_description
 
 
 system_blueprint = Blueprint("system", __name__, url_prefix = "/static/system")
@@ -15,7 +15,7 @@ def create():
     name = request.json.get("name", "")
     description = request.json.get("description", "")
 
-    system_model = create_new_system()
+    system_model = create_new_system_model(name = name, description = description)
     return jsonify({
         "message" : "system created",
         "data" : {

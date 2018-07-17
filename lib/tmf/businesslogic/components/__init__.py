@@ -3,3 +3,4 @@
 
 from .code_component import CodeComponent
 from .composite_component import CompositeComponent
+from .component import Component

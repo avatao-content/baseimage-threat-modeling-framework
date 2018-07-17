@@ -3,7 +3,7 @@
 
 from uuid import UUID
 
-from tmf.businesslogic import System
+from tmf.businesslogic.system import System
 from .boundary_converter import convert_boundary_model_to_boundary
 from .data_flow_converter import convert_data_flow_model_to_data_flow
 

@@ -2,7 +2,6 @@
 # All Rights Reserved. See LICENSE file for details.
 
 from tmf.businesslogic.components import Component
-from .component_converter import convert_component_model_to_component
 
 
 def convert_component_model_to_component(component_model):

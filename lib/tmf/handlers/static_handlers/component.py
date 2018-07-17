@@ -5,12 +5,12 @@ from uuid import UUID
 
 from flask import Blueprint, request, jsonify
 
-from tmf.dataaccess.data_gateway import create_new_system, set_system_name, set_system_description
+from tmf.dataaccess.data_gateway import create_new_system_model, set_system_name, set_system_description
 
 
 component_blueprint = Blueprint("component", __name__, url_prefix = "/static/systems/boundaries")
 
-@system_blueprint.route("/<uuid:boundary_id>/create", methods = ["POST"])
+@component_blueprint.route("/<uuid:boundary_id>/create", methods = ["POST"])
 def create():
     name = request.json.get("name", "")
     description = request.json.get("description", "")
@@ -25,7 +25,7 @@ def create():
         }
     })
 
-@system_blueprint.route("/<uuid:system_id>/set_name", methods = ["POST"])
+@component_blueprint.route("/<uuid:system_id>/set_name", methods = ["POST"])
 def set_name(system_id: UUID):
     name = request.json.get("name", "")
 
@@ -39,7 +39,7 @@ def set_name(system_id: UUID):
         }
     })
 
-@system_blueprint.route("/<uuid:system_id>/set_description", methods = ["POST"])
+@component_blueprint.route("/<uuid:system_id>/set_description", methods = ["POST"])
 def set_description(system_id: UUID):
     description = request.json.get("description", "")
 
