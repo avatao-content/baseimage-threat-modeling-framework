@@ -1,13 +1,12 @@
 # Copyright (C) 2018 Avatao.com Innovative Learning Kft.
 # All Rights Reserved. See LICENSE file for details.
 
-from tmf.core import System
-from tmf.core.boundaries import Boundary
-from tmf.core.components import CodeComponent
-from tmf.core.code import CodeSnippet
-from tmf.core.data_flows import BinaryDataFlow
-from tmf.core.data_flows import GenericDataFlow
-from tmf.core.threats import DenialOfService
+from tmf.businesslogic.system import System
+from tmf.businesslogic.boundaries import Boundary
+from tmf.businesslogic.components import CodeComponent
+from tmf.businesslogic.code import CodeSnippet
+from tmf.businesslogic.data_flows import BinaryDataFlow, GenericDataFlow
+from tmf.businesslogic.threats import DenialOfService
 
 if __name__ == '__main__':
 
