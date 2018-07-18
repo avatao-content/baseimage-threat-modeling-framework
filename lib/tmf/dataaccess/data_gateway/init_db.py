@@ -8,6 +8,5 @@ from tmf.dataaccess.orm.models import BoundaryModel, ComponentModel, SystemModel
 from .session import engine
 
 def init_db():
-    """ Initializes the database, that is, creates all tables in it.
-    """
+    """ Initializes the database by creating all tables in it."""
     UnitModel.metadata.create_all(bind=engine)

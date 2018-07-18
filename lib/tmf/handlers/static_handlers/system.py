@@ -19,7 +19,7 @@ def create():
     return jsonify({
         "message" : "system created",
         "data" : {
-            "id" : system_model.id,
+            "id" : system_model.id_,
             "name" : system_model.name,
             "description" : system_model.description
         }
@@ -33,7 +33,7 @@ def set_name(system_id: UUID):
     return jsonify({
         "message" : "system's name set",
         "data" : {
-            "id" : system_model.id,
+            "id" : system_model.id_,
             "name" : system_model.name,
             "description" : system_model.description
         }
@@ -47,7 +47,7 @@ def set_description(system_id: UUID):
     return jsonify({
         "message" : "system's name set",
         "data" : {
-            "id" : system_model.id,
+            "id" : system_model.id_,
             "name" : system_model.name,
             "description" : system_model.description
         }

@@ -14,8 +14,8 @@ class ComponentModel(ThreatContainerModel):
     name = Column(String)
     description = Column(Text)
 
-    inflows = relationship("DataFlowModel", back_populates = "end_point")
-    outflows = relationship("DataFlowModel", back_populates = "start_point")
+    inflows = relationship("DataFlowModel", foreign_keys = "[DataFlowModel.end_point_id]", back_populates = "end_point")
+    outflows = relationship("DataFlowModel", foreign_keys = "[DataFlowModel.start_point_id]", back_populates = "start_point")
 
     __mapper_args__ = {
         'polymorphic_identity':'component',
