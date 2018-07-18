@@ -4,3 +4,6 @@
 from .unit import UnitModel
 from .threat_container import ThreatContainerModel
 from .system import SystemModel
+from .component import ComponentModel
+from .boundary import BoundaryModel
+from .generate_id import generate_id

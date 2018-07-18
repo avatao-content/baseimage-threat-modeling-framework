@@ -8,7 +8,7 @@ from .unit import UnitModel
 from .generate_id import generate_id
 
 
-boundary_component_association_table = Table('boundary-component', Base.metadata,
+boundary_component_association_table = Table('boundary-component', UnitModel.metadata,
     Column('boundary_id', String, ForeignKey('boundaries.id_')),
     Column('component_id', String, ForeignKey('components.id_'))
 )

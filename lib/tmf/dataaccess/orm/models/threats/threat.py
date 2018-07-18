@@ -5,7 +5,7 @@ from sqlalchemy import Column, Boolean, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from tmf.dataacces.orm.models import UnitModel
+from tmf.dataaccess.orm.models import UnitModel, generate_id
 
 
 class ThreatModel(UnitModel):

@@ -13,7 +13,7 @@ class DataFlowModel(ThreatContainerModel):
     id_ = Column(String, ForeignKey('threat_containers.id_'), primary_key = True)
     name = Column(String)
     description = Column(Text)
-    type = Column(String)
+
     start_point_id = Column(String, ForeignKey("components.id_"))
     end_point_id = Column(String, ForeignKey("components.id_"))
 
@@ -21,5 +21,5 @@ class DataFlowModel(ThreatContainerModel):
     end_point = relationship("ComponentModel", back_populates = "inflows")
 
     __mapper_args__ = {
-        'polymorphic_on':type
+        'polymorphic_identity':'data_flow',
     }
