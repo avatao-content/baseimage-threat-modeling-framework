@@ -6,4 +6,5 @@ from .threat_container import ThreatContainerModel
 from .system import SystemModel
 from .component import ComponentModel
 from .boundary import BoundaryModel
+from .boundary_component_link import boundary_component_link
 from .generate_id import generate_id

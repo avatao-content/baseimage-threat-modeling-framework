@@ -3,3 +3,4 @@
 
 from .system import system_blueprint
 from .component import component_blueprint
+from .boundary import boundary_blueprint

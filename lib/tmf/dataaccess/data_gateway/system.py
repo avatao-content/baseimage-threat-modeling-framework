@@ -15,6 +15,11 @@ def get_system_by_id(id : UUID):
 
     return system
 
+def get_system_model_by_id(id : UUID):
+    system_model = session.query(SystemModel).get(str(id))
+
+    return system_model
+
 def create_new_system_model(name, description):
     system_model = SystemModel(name = name, description = description)
     session.add(system_model)
