@@ -6,10 +6,11 @@ from uuid import UUID
 from tmf.dataaccess.orm.models import SystemModel
 from tmf.dataaccess.data_gateway.converters import convert_system_model_to_system
 from .session import session
+from .check_none import check_none
 
 
 def get_system_by_id(id : UUID):
-    system_model = session.query(SystemModel).get(str(id))
+    system_model = get_system_model_by_id(id)
 
     system = convert_system_model_to_system(system_model)
 
@@ -17,6 +18,7 @@ def get_system_by_id(id : UUID):
 
 def get_system_model_by_id(id : UUID):
     system_model = session.query(SystemModel).get(str(id))
+    check_none(system_model, id)
 
     return system_model
 
@@ -29,6 +31,7 @@ def create_new_system_model(name, description):
 
 def set_system_name(id : UUID, name : str):
     system_model = session.query(SystemModel).get(str(id))
+    check_none(system_model, id)
     system_model.name = name
     session.commit()
 
@@ -36,6 +39,7 @@ def set_system_name(id : UUID, name : str):
 
 def set_system_description(id : UUID, description : str):
     system_model = session.query(SystemModel).get(str(id))
+    check_none(system_model, id)
     system_model.description = description
     session.commit()
 

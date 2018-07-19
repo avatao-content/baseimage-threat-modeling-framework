@@ -4,4 +4,10 @@
 from .binary_data_flow import BinaryDataFlow
 from .custom_data_flow import CustomDataFlow
 from .generic_data_flow import GenericDataFlow
-from .types import types
+
+
+types = {
+    "custom_data_flow" : CustomDataFlow,
+    "generic_data_flow" : GenericDataFlow,
+    "binary_data_flow" : BinaryDataFlow
+}

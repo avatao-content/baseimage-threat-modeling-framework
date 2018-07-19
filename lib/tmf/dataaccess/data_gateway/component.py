@@ -5,7 +5,14 @@ from uuid import UUID
 
 from tmf.dataaccess.orm.models import ComponentModel, BoundaryModel
 from .session import session
+from .check_none import check_none
 
+
+def get_component_model_by_id(id : UUID):
+    component_model = session.query(ComponentModel).get(str(id))
+    check_none(component_model, id)
+
+    return component_model
 
 def create_new_component_model(boundary_id : UUID, name : str, description : str):
     component_model = ComponentModel(name = name, description = description)

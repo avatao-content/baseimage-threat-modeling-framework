@@ -6,6 +6,7 @@ from uuid import UUID
 from flask import Blueprint, request, jsonify
 
 from tmf.dataaccess.data_gateway import create_new_system_model, set_system_name, set_system_description, get_system_model_by_id
+from tmf.dataaccess.exceptions import InvalidPrimaryKeyError
 
 
 system_blueprint = Blueprint("system", __name__, url_prefix = "/static/systems")
@@ -27,7 +28,10 @@ def create():
 
 @system_blueprint.route("/<uuid:system_id>")
 def get(system_id: UUID):
-    system_model = get_system_model_by_id(system_id)
+    try:
+        system_model = get_system_model_by_id(system_id)
+    except InvalidPrimaryKeyError as error:
+        abort(404)
 
     return jsonify({
         "message" : "sending existing system",

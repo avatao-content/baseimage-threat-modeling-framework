@@ -8,4 +8,13 @@ from .information_disclosure import InformationDisclosureModel
 from .repudiation import RepudiationModel
 from .spoofing import SpoofingModel
 from .tampering import TamperingModel
-from .types import types
+
+types = {
+    "custom_threat" : CustomThreatModel,
+    "denial_of_service" : DenialOfServiceModel,
+    "elevation_of_privilage" : ElevationOfPrivilageModel,
+    "information_disclosure" : InformationDisclosureModel,
+    "repudiation" : RepudiationModel,
+    "spoofing" : SpoofingModel,
+    "tampering" : TamperingModel
+}

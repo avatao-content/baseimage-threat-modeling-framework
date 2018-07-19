@@ -8,4 +8,14 @@ from .tampering import Tampering
 from .information_disclosure import InformationDisclosure
 from .repudiation import Repudiation
 from .spoofing import Spoofing
-from .types import types
+
+
+types = {
+    "custom_threat" : CustomThreat,
+    "denial_of_service" : DenialOfService,
+    "elevation_of_privilage" : ElevationOfPrivilage,
+    "information_disclosure" : InformationDisclosure,
+    "repudiation" : Repudiation,
+    "spoofing" : Spoofing,
+    "tampering" : Tampering
+}

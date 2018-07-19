@@ -3,14 +3,7 @@
 
 from uuid import UUID
 
-from tmf.businesslogic.data_flows import BinaryDataFlow, CustomDataFlow, GenericDataFlow
-
-
-types = {
-    "custom_data_flow" : CustomDataFlow,
-    "generic_data_flow" : GenericDataFlow,
-    "binary_data_flow" : BinaryDataFlow
-}
+from tmf.dataaccess.orm.models.data_flows import types
 
 def convert_data_flow_model_to_data_flow(data_flow_model, components):
     data_flow = types[threat_model.type](entity_id = data_flow_model.id_, name = data_flow_model.name, description = data_flow_model.description)
