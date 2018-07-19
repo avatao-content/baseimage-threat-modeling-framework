@@ -7,7 +7,6 @@ from tmf.dataaccess.orm.models import SystemModel, BoundaryModel, boundary_compo
 from .session import session
 from .check_none import check_none
 from .system import get_system_model_by_id
-from .component import get_component_model_by_id
 
 
 def get_boundary_model_by_id(id : UUID):
@@ -38,12 +37,3 @@ def set_boundary_description(id : UUID, description : str):
     session.commit()
 
     return boundary_model
-
-def add_component_to_boundary(boundary_id: UUID, component_id: UUID):
-    boundary_model = get_boundary_model_by_id(boundary_id)
-    component_model = get_component_model_by_id(component_id)
-
-    boundary_model.components.append(component_model)
-    session.commit()
-
-    return session.query(boundary_component_link).get((str(boundary_id), str(component_id)))

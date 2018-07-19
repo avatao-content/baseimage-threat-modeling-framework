@@ -2,3 +2,4 @@
 # All Rights Reserved. See LICENSE file for details.
 
 from .invalid_primary_key_error import InvalidPrimaryKeyError
+from .invalid_type_error import InvalidTypeError

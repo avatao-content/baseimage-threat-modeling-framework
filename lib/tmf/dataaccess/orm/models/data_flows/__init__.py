@@ -4,4 +4,5 @@
 from .binary_data_flow import BinaryDataFlowModel
 from .custom_data_flow import CustomDataFlowModel
 from .generic_data_flow import GenericDataFlowModel
+from .data_flow import DataFlowModel
 from .types import types

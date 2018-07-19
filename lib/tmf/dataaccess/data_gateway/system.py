@@ -30,16 +30,14 @@ def create_new_system_model(name, description):
     return system_model
 
 def set_system_name(id : UUID, name : str):
-    system_model = session.query(SystemModel).get(str(id))
-    check_none(system_model, id)
+    system_model = get_system_model_by_id(id)
     system_model.name = name
     session.commit()
 
     return system_model
 
 def set_system_description(id : UUID, description : str):
-    system_model = session.query(SystemModel).get(str(id))
-    check_none(system_model, id)
+    system_model = get_system_model_by_id(id)
     system_model.description = description
     session.commit()
 

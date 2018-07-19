@@ -3,6 +3,7 @@
 
 from uuid import UUID
 
+
 class InvalidPrimaryKeyError(LookupError):
 
     def __init__(self, key : UUID, message = " primary key was not found"):
@@ -10,4 +11,4 @@ class InvalidPrimaryKeyError(LookupError):
         self.message = message
 
     def __str__(self):
-        return self.key + self.message
+        return self.key + " " + self.message

@@ -3,8 +3,9 @@
 
 from uuid import UUID
 
-from tmf.dataaccess.orm.models import SystemModel, DataFlowModel
-from tmf.dataaccess.orm.models.data_flows import types
+from tmf.dataaccess.orm.models import SystemModel
+from tmf.dataaccess.orm.models.data_flows import types, DataFlowModel
+from tmf.dataaccess.exceptions import InvalidTypeError
 from .session import session
 from .check_none import check_none
 from .system import get_system_model_by_id
@@ -17,11 +18,14 @@ def get_data_flow_model_by_id(id : UUID):
 
     return data_flow_model
 
-def create_new_data_flow_model(system_id : UUID, name : str, description : str, type : str):
-    data_flow_model = types[type](name = name, description = description)
+def create_new_data_flow_model(system_id : UUID, name : str, description : str, data_flow_type : str):
+    try:
+        data_flow_model = types[data_flow_type](name = name, description = description)
+    except KeyError:
+        raise InvalidTypeError(data_flow_type)
 
     system_model = get_system_model_by_id(system_id)
-    system_model.components.append(data_flow_model)
+    system_model.data_flows.append(data_flow_model)
     session.commit()
 
     return data_flow_model

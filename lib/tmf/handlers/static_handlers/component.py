@@ -3,52 +3,79 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, abort
 
-from tmf.dataaccess.data_gateway import create_new_system_model, set_system_name, set_system_description
+from tmf.dataaccess.data_gateway import create_new_component_model, set_component_name, set_component_description, get_component_model_by_id
+from tmf.dataaccess.exceptions import InvalidPrimaryKeyError
 
 
-component_blueprint = Blueprint("component", __name__, url_prefix = "/static/systems/boundaries")
+component_blueprint = Blueprint("component", __name__, url_prefix = "/static")
 
-@component_blueprint.route("/<uuid:boundary_id>/create", methods = ["POST"])
-def create():
-    name = request.json.get("name", "")
-    description = request.json.get("description", "")
+def full_component_model_to_dict(component_model):
+    return  {
+        "id" : component_model.id_,
+        "name" : component_model.name,
+        "description" : component_model.description,
+        "threats" : [threat.id_ for threat in component_model.threats],
+        "inflows" : [inflow.id_ for inflow in component_model.inflows],
+        "outflows" : [outflow.id_ for outflow in component_model.outflows],
+    }
 
-    system_model = create_new_system()
+
+@component_blueprint.route("/boundaries/<uuid:boundary_id>/components/create", methods = ["POST"])
+def create(boundary_id : UUID):
+    name = "" #TODO default name and description
+    description = ""
+    if request.json:
+        name = request.json.get("name", "")
+        description = request.json.get("description", "")
+
+    try:
+        component_model = create_new_component_model(boundary_id = boundary_id, name = name, description = description)
+    except InvalidPrimaryKeyError as error:
+        abort(404, error)
+
     return jsonify({
-        "message" : "system created",
+        "message" : "component created",
         "data" : {
-            "id" : system_model.id,
-            "name" : system_model.name,
-            "description" : system_model.description
+            "id" : component_model.id_,
+            "name" : component_model.name,
+            "description" : component_model.description
         }
     })
 
-@component_blueprint.route("/<uuid:system_id>/set_name", methods = ["POST"])
-def set_name(system_id: UUID):
-    name = request.json.get("name", "")
+@component_blueprint.route("/components/<uuid:component_id>", methods = ("PUT", "GET"))
+def get(component_id: UUID):
+    if request.method == "PUT":
+        return set_properties(component_id, request)
 
-    system_model = set_system_name(system_id, name)
+    try:
+        component_model = get_component_model_by_id(boundary_id)
+    except InvalidPrimaryKeyError as error:
+        abort(404, error)
+
     return jsonify({
-        "message" : "system's name set",
-        "data" : {
-            "id" : system_model.id,
-            "name" : system_model.name,
-            "description" : system_model.description
-        }
+        "message" : "sending existing component",
+        "data" : full_component_model_to_dict(component_model)
     })
 
-@component_blueprint.route("/<uuid:system_id>/set_description", methods = ["POST"])
-def set_description(system_id: UUID):
-    description = request.json.get("description", "")
+def set_properties(component_id: UUID, request):
+    if not request.json or not "description" in request.json and not "name" in request.json:
+        abort(400)
 
-    system_model = set_system_description(system_id, description)
+    try:
+        if "name" in request.json:
+            component_model = set_component_name(component_id, request.json["name"])
+        if "description" in request.json:
+            component_model = set_component_description(component_id, request.json["description"])
+    except InvalidPrimaryKeyError as error:
+        abort(404, error)
+
     return jsonify({
-        "message" : "system's name set",
+        "message" : "component's properties have been set",
         "data" : {
-            "id" : system_model.id,
-            "name" : system_model.name,
-            "description" : system_model.description
+            "id" : component_model.id_,
+            "name" : component_model.name,
+            "description" : component_model.description
         }
     })

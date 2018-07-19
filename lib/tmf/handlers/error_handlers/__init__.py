@@ -2,3 +2,4 @@
 # All Rights Reserved. See LICENSE file for details.
 
 from .not_found import not_found
+from .bad_request import bad_request
