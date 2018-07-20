@@ -8,4 +8,5 @@ from .information_disclosure import InformationDisclosureModel
 from .repudiation import RepudiationModel
 from .spoofing import SpoofingModel
 from .tampering import TamperingModel
+from .threat import ThreatModel
 from .types import types
