@@ -10,6 +10,7 @@ from .session import session
 from .check_none import check_none
 from .system import get_system_model_by_id
 from .component import get_component_model_by_id
+from .check_same_system import check_component_data_flow_in_same_system
 
 
 def get_data_flow_model_by_id(id : UUID):
@@ -47,6 +48,7 @@ def set_data_flow_description(id : UUID, description : str):
 def set_data_flow_start_point(data_flow_id : UUID, component_id : UUID):
     data_flow_model = get_data_flow_model_by_id(data_flow_id)
     component_model = get_component_model_by_id(component_id)
+    check_component_data_flow_in_same_system(component_model = component_model, data_flow_model = data_flow_model)
 
     data_flow_model.start_point = component_model
     session.commit()
@@ -56,6 +58,7 @@ def set_data_flow_start_point(data_flow_id : UUID, component_id : UUID):
 def set_data_flow_end_point(data_flow_id : UUID, component_id : UUID):
     data_flow_model = get_data_flow_model_by_id(data_flow_id)
     component_model = get_component_model_by_id(component_id)
+    check_component_data_flow_in_same_system(component_model = component_model, data_flow_model = data_flow_model)
 
     data_flow_model.end = component_model
     session.commit()

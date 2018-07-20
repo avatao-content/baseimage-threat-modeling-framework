@@ -3,10 +3,13 @@
 
 from uuid import UUID
 
-from tmf.dataaccess.orm.models import ComponentModel, BoundaryModel
+from sqlalchemy import and_
+
+from tmf.dataaccess.orm.models import ComponentModel, BoundaryModel, boundary_component_link
 from .session import session
-from .check_none import check_none
 from .boundary import get_boundary_model_by_id
+from .check_none import check_none
+from .check_same_system import check_component_boundary_in_same_system
 
 
 def get_component_model_by_id(id : UUID):
@@ -41,8 +44,11 @@ def set_component_description(id : UUID, description : str):
 def add_component_to_boundary(boundary_id: UUID, component_id: UUID):
     boundary_model = get_boundary_model_by_id(boundary_id)
     component_model = get_component_model_by_id(component_id)
+    check_component_boundary_in_same_system(boundary_model = boundary_model, component_model = component_model)
 
     boundary_model.components.append(component_model)
     session.commit()
 
-    return session.query(boundary_component_link).get((str(boundary_id), str(component_id)))
+    return session.execute(boundary_component_link.select().where( and_(
+        boundary_component_link.columns.boundary_id == str(boundary_id),
+        boundary_component_link.columns.component_id == str(component_id)))).fetchone()

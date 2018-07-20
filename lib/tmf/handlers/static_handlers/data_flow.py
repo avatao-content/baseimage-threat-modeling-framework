@@ -6,7 +6,7 @@ from uuid import UUID
 from flask import Blueprint, request, jsonify, abort
 
 from tmf.dataaccess.data_gateway import create_new_data_flow_model, set_data_flow_name, set_data_flow_description, get_data_flow_model_by_id, set_data_flow_start_point, set_data_flow_end_point, get_component_model_by_id
-from tmf.dataaccess.exceptions import InvalidPrimaryKeyError, InvalidTypeError
+from tmf.dataaccess.exceptions import InvalidPrimaryKeyError, InvalidTypeError, NotInTheSameSystemError
 from .component import full_component_model_to_dict
 
 
@@ -114,6 +114,8 @@ def set_end_point(data_flow_id : UUID, request):
         data_flow_model = set_data_flow_end_point(data_flow_id = data_flow_id, component_id = request.json["component_id"])
     except InvalidPrimaryKeyError as error:
         abort(404, error)
+    except NotInTheSameSystemError as serror:
+            abort(409, serror)
 
     return jsonify({
         "message" : "data flow's end point has been connected",
@@ -154,6 +156,8 @@ def set_start_point(data_flow_id : UUID, request):
         data_flow_model = set_data_flow_start_point(data_flow_id = data_flow_id, component_id = request.json["component_id"])
     except InvalidPrimaryKeyError as error:
         abort(404, error)
+    except NotInTheSameSystemError as serror:
+        abort(409, serror)
 
     return jsonify({
         "message" : "data flow's start point has been connected",
