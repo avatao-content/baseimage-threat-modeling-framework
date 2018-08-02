@@ -20,3 +20,11 @@ class SystemSerializer:
             "boundaries" : [BoundarySerializer(boundary).create_one_level_dictionary() for boundary in self._system.boundaries],
             "data_flows" : [DataFlowSerializer(data_flow).create_one_level_dictionary() for data_flow in self._system.data_flows]
         }
+
+    def create_one_level_dictionary(self):
+        return {
+            "id" : self._system.id_,
+            "name" : self._system.name,
+            "description" : self._system.description,
+            "href" : domain_name + self._path + str(self._system.id_)
+        }
