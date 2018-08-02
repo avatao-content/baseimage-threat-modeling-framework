@@ -28,7 +28,7 @@ def create(system_id : UUID):
 
     boundary_serializer = BoundarySerializer(boundary_model)
 
-    return create_message("boundary created", boundary_serializer.create_full_dictionary())
+    return create_message("boundary created", boundary_serializer.create_one_level_dictionary())
 
 @boundary_blueprint.route("/boundaries/<uuid:boundary_id>", methods = ("PUT", "GET"))
 def get(boundary_id: UUID):
@@ -58,7 +58,7 @@ def set_properties(boundary_id: UUID, request):
 
     boundary_serializer = BoundarySerializer(boundary_model)
 
-    return create_message("boundary's properties have been set", boundary_serializer.create_full_dictionary())
+    return create_message("boundary's properties have been set", boundary_serializer.create_one_level_dictionary())
 
 @boundary_blueprint.route("/boundaries/<uuid:boundary_id>/components", methods = ("PUT", "GET"))
 def get_components(boundary_id : UUID):
