@@ -3,7 +3,6 @@
 
 from tmf.handlers import domain_name
 from .threat_serializer import ThreatSerializer
-from .component_serializer import *
 
 
 class DataFlowSerializer:
@@ -13,6 +12,7 @@ class DataFlowSerializer:
         self._path = "/static/data_flows/"
 
     def create_full_dictionary(self):
+        from .component_serializer import ComponentSerializer
         return {
             "id" : self._data_flow.id_,
             "name" : self._data_flow.name,
@@ -20,9 +20,9 @@ class DataFlowSerializer:
             "system id" : self._data_flow.system_id,
             "type" : self._data_flow.type,
             "href" : domain_name + self._path + str(self._data_flow.id_),
-            "threats" : [ThreatSerializer(threat).create_one_level_dictionary() for threat in self._component.threats],
-            "start point" :  ComponentSerializer(data_flow_model.start_point).create_one_level_dictionary() if data_flow_model.start_point else "",
-            "end point" :  ComponentSerializer(data_flow_model.end_point).create_one_level_dictionary() if data_flow_model.end_point else ""
+            "threats" : [ThreatSerializer(threat).create_one_level_dictionary() for threat in self._data_flow.threats],
+            "start point" :  ComponentSerializer(self._data_flow.start_point).create_one_level_dictionary() if self._data_flow.start_point else "",
+            "end point" :  ComponentSerializer(self._data_flow.end_point).create_one_level_dictionary() if self._data_flow.end_point else ""
         }
 
     def create_one_level_dictionary(self):

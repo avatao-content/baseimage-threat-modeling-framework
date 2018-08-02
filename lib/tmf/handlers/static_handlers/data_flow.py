@@ -81,7 +81,7 @@ def set_end_point(data_flow_id : UUID, request):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
     except NotInTheSameSystemError as serror:
-            abort(409, serror)
+        abort(409, serror)
 
     return create_message("data flow's end point has been connected", {
         "data flow id" : data_flow_model.id_,

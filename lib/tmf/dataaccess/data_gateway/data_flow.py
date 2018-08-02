@@ -60,7 +60,7 @@ def set_data_flow_end_point(data_flow_id : UUID, component_id : UUID):
     component_model = get_component_model_by_id(component_id)
     check_component_data_flow_in_same_system(component_model = component_model, data_flow_model = data_flow_model)
 
-    data_flow_model.end = component_model
+    data_flow_model.end_point = component_model
     session.commit()
 
     return data_flow_model
