@@ -3,23 +3,15 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, abort
 
 from tmf.dataaccess.data_gateway import create_new_threat_model, get_all_threat_models_in_system, get_threat_model_by_id, set_threat_name, set_threat_detected, set_threat_description
 from tmf.dataaccess.exceptions import InvalidPrimaryKeyError, InvalidTypeError
+from tmf.handlers.serialization import ThreatSerializer
+from .create_message import create_message
 
 
 threat_blueprint = Blueprint("threat", __name__, url_prefix = "/static")
-
-def full_threat_model_to_dict(threat_model):
-    return {
-        "id" : threat_model.id_,
-        "name" : threat_model.name,
-        "description" : threat_model.description,
-        "type" : threat_model.type,
-        "detected" : threat_model.detected,
-        "container" : threat_model.threat_container_id
-    }
 
 @threat_blueprint.route("/threat_containers/<uuid:threat_container_id>/threats/create", methods = ["POST"])
 def create(threat_container_id : UUID):
@@ -37,10 +29,7 @@ def create(threat_container_id : UUID):
     except InvalidTypeError as terror:
         abort(400, terror)
 
-    return jsonify({
-        "message" : "threat created",
-        "data" : full_threat_model_to_dict(threat_model)
-    })
+    return create_message("threat created", ThreatSerializer(threat_model).create_one_level_dictionary())
 
 @threat_blueprint.route("/threats/<uuid:threat_id>", methods = ("PUT", "GET"))
 def get_properties(threat_id: UUID):
@@ -52,10 +41,7 @@ def get_properties(threat_id: UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "sending existing threat",
-        "data" : full_threat_model_to_dict(threat_model)
-    })
+    return create_message("sending existing threat", ThreatSerializer(threat_model).create_full_dictionary())
 
 def set_properties(threat_id: UUID, request):
     if not request.json or not "description" in request.json and not "name" in request.json and not "detected" in request.json:
@@ -71,10 +57,7 @@ def set_properties(threat_id: UUID, request):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "threat's properties have been set",
-        "data" : full_threat_model_to_dict(threat_model)
-    })
+    return create_message("threat's properties have been set", ThreatSerializer(threat_model).create_one_level_dictionary())
 
 @threat_blueprint.route("/systems/<uuid:system_id>/threats")
 def get_all_threats_in_system(system_id):
@@ -83,10 +66,7 @@ def get_all_threats_in_system(system_id):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "returning all threats in system",
-        "data" : {
-            "system id" : system_id,
-            "threat" : [full_threat_model_to_dict(threat_model) for threat_model in threat_models]
-        }
+    return create_message("returning all threats in system", {
+        "system id" : system_id,
+        "threat" : [ThreatSerializer(threat_model).create_full_dictionary() for threat_model in threat_models]
     })

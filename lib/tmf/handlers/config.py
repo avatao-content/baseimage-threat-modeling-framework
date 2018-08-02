@@ -1,4 +1,4 @@
 # Copyright (C) 2018 Avatao.com Innovative Learning Kft.
 # All Rights Reserved. See LICENSE file for details.
 
-from .config import domain_name
+domain_name = "localhost:5000" #TODO load from config

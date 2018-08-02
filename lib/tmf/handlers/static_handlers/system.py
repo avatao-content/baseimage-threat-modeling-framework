@@ -3,10 +3,12 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, abort
 
 from tmf.dataaccess.data_gateway import create_new_system_model, set_system_name, set_system_description, get_system_model_by_id
 from tmf.dataaccess.exceptions import InvalidPrimaryKeyError
+from tmf.handlers.serialization import SystemSerializer
+from .create_message import create_message
 
 
 system_blueprint = Blueprint("system", __name__, url_prefix = "/static/systems")
@@ -20,14 +22,9 @@ def create():
         description = request.json.get("description", "")
 
     system_model = create_new_system_model(name = name, description = description)
-    return jsonify({
-        "message" : "system created",
-        "data" : {
-            "id" : system_model.id_,
-            "name" : system_model.name,
-            "description" : system_model.description
-        }
-    })
+    system_serializer = SystemSerializer(system_model)
+
+    return create_message("system created", system_serializer.create_one_level_dictionary())
 
 @system_blueprint.route("/<uuid:system_id>", methods = ("PUT", "GET"))
 def get(system_id: UUID):
@@ -39,16 +36,9 @@ def get(system_id: UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "sending existing system",
-        "data" : {
-            "id" : system_model.id_,
-            "name" : system_model.name,
-            "description" : system_model.description,
-            "boundaries" : [boundary.id_ for boundary in system_model.boundaries],
-            "data_flows" : [data_flow.id_ for data_flow in system_model.data_flows]
-        }
-    })
+    system_serializer = SystemSerializer(system_model)
+
+    return create_message("sending existing system", system_serializer.create_full_dictionary())
 
 def set_properties(system_id: UUID, request):
     if not request.json or not "description" in request.json and not "name" in request.json:
@@ -62,11 +52,6 @@ def set_properties(system_id: UUID, request):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "system's properties have been set",
-        "data" : {
-            "id" : system_model.id_,
-            "name" : system_model.name,
-            "description" : system_model.description
-        }
-    })
+    system_serializer = SystemSerializer(system_model)
+
+    return create_message("system's properties have been set", system_serializer.create_one_level_dictionary())

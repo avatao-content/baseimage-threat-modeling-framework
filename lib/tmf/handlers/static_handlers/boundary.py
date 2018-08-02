@@ -3,10 +3,12 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, abort
 
 from tmf.dataaccess.data_gateway import create_new_boundary_model, set_boundary_name, set_boundary_description, get_boundary_model_by_id, add_component_to_boundary
 from tmf.dataaccess.exceptions import InvalidPrimaryKeyError, NotInTheSameSystemError
+from tmf.handlers.serialization import BoundarySerializer
+from .create_message import create_message
 
 
 boundary_blueprint = Blueprint("boundary", __name__, url_prefix = "/static")
@@ -24,14 +26,9 @@ def create(system_id : UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "boundary created",
-        "data" : {
-            "id" : boundary_model.id_,
-            "name" : boundary_model.name,
-            "description" : boundary_model.description
-        }
-    })
+    boundary_serializer = BoundarySerializer(boundary_model)
+
+    return create_message("boundary created", boundary_serializer.create_full_dictionary())
 
 @boundary_blueprint.route("/boundaries/<uuid:boundary_id>", methods = ("PUT", "GET"))
 def get(boundary_id: UUID):
@@ -43,16 +40,9 @@ def get(boundary_id: UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "sending existing boundary",
-        "data" : {
-            "id" : boundary_model.id_,
-            "name" : boundary_model.name,
-            "description" : boundary_model.description,
-            "system id" : boundary_model.system_id,
-            "components" : [component.id_ for component in boundary_model.components]
-        }
-    })
+    boundary_serializer = BoundarySerializer(boundary_model)
+
+    return create_message("sending existing boundary", boundary_serializer.create_full_dictionary())
 
 def set_properties(boundary_id: UUID, request):
     if not request.json or not "description" in request.json and not "name" in request.json:
@@ -66,15 +56,9 @@ def set_properties(boundary_id: UUID, request):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "boundary's properties have been set",
-        "data" : {
-            "id" : boundary_model.id_,
-            "name" : boundary_model.name,
-            "description" : boundary_model.description
-        }
-    })
+    boundary_serializer = BoundarySerializer(boundary_model)
 
+    return create_message("boundary's properties have been set", boundary_serializer.create_full_dictionary())
 
 @boundary_blueprint.route("/boundaries/<uuid:boundary_id>/components", methods = ("PUT", "GET"))
 def get_components(boundary_id : UUID):
@@ -86,10 +70,7 @@ def get_components(boundary_id : UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "sending boundary's components",
-        "data" : [component.id_ for component in boundary_model.components]
-    })
+    return create_message("sending boundary's components",[component.id_ for component in boundary_model.components])
 
 def add_component(boundary_id, request):
     if not request.json or not "component_id" in request.json:
@@ -102,10 +83,7 @@ def add_component(boundary_id, request):
     except NotInTheSameSystemError as serror:
         abort(409, serror)
 
-    return jsonify({
-        "message" : "component has been added to boundary",
-        "data" : {
-            "boundary id" : result.boundary_id,
-            "component id" :  result.component_id
-        }
+    return create_message("component has been added to boundary", {
+        "boundary id" : result.boundary_id,
+        "component id" :  result.component_id
     })

@@ -3,24 +3,14 @@
 
 from uuid import UUID
 
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, abort
 
 from tmf.dataaccess.data_gateway import create_new_component_model, set_component_name, set_component_description, get_component_model_by_id
 from tmf.dataaccess.exceptions import InvalidPrimaryKeyError
-
+from tmf.handlers.serialization import ComponentSerializer
+from .create_message import create_message
 
 component_blueprint = Blueprint("component", __name__, url_prefix = "/static")
-
-def full_component_model_to_dict(component_model):
-    return  {
-        "id" : component_model.id_,
-        "name" : component_model.name,
-        "description" : component_model.description,
-        "threats" : [threat.id_ for threat in component_model.threats],
-        "inflows" : [inflow.id_ for inflow in component_model.inflows],
-        "outflows" : [outflow.id_ for outflow in component_model.outflows],
-    }
-
 
 @component_blueprint.route("/boundaries/<uuid:boundary_id>/components/create", methods = ["POST"])
 def create(boundary_id : UUID):
@@ -35,14 +25,7 @@ def create(boundary_id : UUID):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "component created",
-        "data" : {
-            "id" : component_model.id_,
-            "name" : component_model.name,
-            "description" : component_model.description
-        }
-    })
+    return create_message("component created", ComponentSerializer(component_model).create_one_level_dictionary())
 
 @component_blueprint.route("/components/<uuid:component_id>", methods = ("PUT", "GET"))
 def get(component_id: UUID):
@@ -50,14 +33,11 @@ def get(component_id: UUID):
         return set_properties(component_id, request)
 
     try:
-        component_model = get_component_model_by_id(boundary_id)
+        component_model = get_component_model_by_id(component_id)
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "sending existing component",
-        "data" : full_component_model_to_dict(component_model)
-    })
+    return create_message("sending existing component", ComponentSerializer(component_model).create_full_dictionary())
 
 def set_properties(component_id: UUID, request):
     if not request.json or not "description" in request.json and not "name" in request.json:
@@ -71,11 +51,4 @@ def set_properties(component_id: UUID, request):
     except InvalidPrimaryKeyError as error:
         abort(404, error)
 
-    return jsonify({
-        "message" : "component's properties have been set",
-        "data" : {
-            "id" : component_model.id_,
-            "name" : component_model.name,
-            "description" : component_model.description
-        }
-    })
+    return create_message("component's properties have been set", ComponentSerializer(component_model).create_one_level_dictionary())
