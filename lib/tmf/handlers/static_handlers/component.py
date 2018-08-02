@@ -12,7 +12,7 @@ from .create_message import create_message
 
 component_blueprint = Blueprint("component", __name__, url_prefix = "/static")
 
-@component_blueprint.route("/boundaries/<uuid:boundary_id>/components/create", methods = ["POST"])
+@component_blueprint.route("/boundaries/<uuid:boundary_id>/components", methods = ["POST"])
 def create(boundary_id : UUID):
     name = "" #TODO default name and description
     description = ""

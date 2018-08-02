@@ -13,7 +13,7 @@ from .create_message import create_message
 
 boundary_blueprint = Blueprint("boundary", __name__, url_prefix = "/static")
 
-@boundary_blueprint.route("/systems/<uuid:system_id>/boundaries/create", methods = ["POST"])
+@boundary_blueprint.route("/systems/<uuid:system_id>/boundaries", methods = ["POST"])
 def create(system_id : UUID):
     name = "" #TODO default name and description
     description = ""

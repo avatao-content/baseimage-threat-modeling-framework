@@ -13,7 +13,7 @@ from .create_message import create_message
 
 data_flow_blueprint = Blueprint("data_flow", __name__, url_prefix = "/static")
 
-@data_flow_blueprint.route("/systems/<uuid:system_id>/data_flows/create", methods = ["POST"])
+@data_flow_blueprint.route("/systems/<uuid:system_id>/data_flows", methods = ["POST"])
 def create(system_id : UUID):
     if not request.json or not "type" in request.json:
         abort(400)

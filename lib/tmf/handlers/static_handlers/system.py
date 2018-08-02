@@ -13,7 +13,7 @@ from .create_message import create_message
 
 system_blueprint = Blueprint("system", __name__, url_prefix = "/static/systems")
 
-@system_blueprint.route("/create", methods = ["POST"])
+@system_blueprint.route("", methods = ["POST"])
 def create():
     name = "" #TODO default name and description
     description = ""

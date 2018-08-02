@@ -13,7 +13,7 @@ from .create_message import create_message
 
 threat_blueprint = Blueprint("threat", __name__, url_prefix = "/static")
 
-@threat_blueprint.route("/threat_containers/<uuid:threat_container_id>/threats/create", methods = ["POST"])
+@threat_blueprint.route("/threat_containers/<uuid:threat_container_id>/threats", methods = ["POST"])
 def create(threat_container_id : UUID):
     if not request.json or not "type" in request.json:
         abort(400)
